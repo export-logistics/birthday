@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>Doğum Günü Sevkiyatı</title>
+<meta name="theme-color" content="#0f2747">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="ust" id="ust">
+  <h1 class="etiket">Sevkiyat <span id="sevNo">AKG-1111-2026</span></h1>
+  <ol class="adimlar" id="adimlar" aria-label="Sevkiyat adımları">
+    <li data-adim="0">Gecikme</li>
+    <li data-adim="1">Yükleme</li>
+    <li data-adim="2">Takip</li>
+    <li data-adim="3">Teslim</li>
+  </ol>
+</header>
+
+<main id="uygulama" class="uygulama">
+
+  <noscript><p class="mesaj hata">Bu sayfa JavaScript olmadan çalışmaz. Lütfen tarayıcınızda JavaScript'i açın.</p></noscript>
+
+  <!-- Hata / eksik ayar -->
+  <section class="ekran" id="ekran-hata" data-ekran="hata" hidden>
+    <h2 tabindex="-1">Sevkiyat başlatılamadı</h2>
+    <p class="mesaj hata" id="hataMetni">Ayarlar yüklenemedi.</p>
+  </section>
+
+  <!-- E0 Açılış -->
+  <section class="ekran" id="ekran-e0" data-ekran="e0" hidden>
+    <h2 tabindex="-1">Sevkiyat bildirimi</h2>
+    <dl class="kart bildirim" id="bildirim">
+      <div><dt>Sevkiyat no</dt><dd id="b-no"></dd></div>
+      <div><dt>Alıcı</dt><dd id="b-alici"></dd></div>
+      <div><dt>Gönderen</dt><dd id="b-gonderen"></dd></div>
+      <div><dt>İçerik</dt><dd id="b-icerik"></dd></div>
+      <div><dt>Teslim tarihi</dt><dd id="b-tarih"></dd></div>
+    </dl>
+    <p class="yonlendirme" id="b-yonlendirme"></p>
+    <p class="mesaj bilgi" id="depoUyari" hidden>İlerleme bu cihazda kaydedilemiyor. Oyun yine de çalışır; sayfayı yenilerseniz baştan başlarsınız.</p>
+    <div class="eylem">
+      <button type="button" class="btn ana" id="btn-basla">Sevkiyatı başlat</button>
+      <button type="button" class="btn ikinci" id="btn-devam" hidden>Kaldığım yerden devam</button>
+    </div>
+  </section>
+
+  <!-- E1 Çark -->
+  <section class="ekran" id="ekran-e1" data-ekran="e1" hidden>
+    <h2 tabindex="-1">Planda gecikme</h2>
+    <p class="giris">Müşteri arıyor: <em>“Yük nerede?”</em> Bir bahane çevir, süre kazan.</p>
+    <div class="cark-alan">
+      <svg class="ibre" viewBox="0 0 24 30" aria-hidden="true" focusable="false"><path d="M12 30 L2 6 A11 11 0 0 1 22 6 Z"/></svg>
+      <svg class="cark" id="cark" viewBox="0 0 208 208" role="img" aria-label="Bahane çarkı, 8 dilim">
+        <g id="carkRotor" class="rotor"></g>
+        <circle class="cark-merkez" cx="104" cy="104" r="9"/>
+      </svg>
+    </div>
+    <div class="sonuc kart" id="carkSonuc" hidden aria-live="polite">
+      <p class="bahane" id="bahaneMetin"></p>
+      <p class="inand"><span class="noktalar" id="noktalar" role="img"></span> <span id="inandMetin"></span></p>
+      <p class="bonus">Kazanılan süre: <strong id="bonusMetin" class="sayi"></strong></p>
+      <p class="meta" id="bahaneMeta"></p>
+      <div id="mailAlan" class="mail-alan" hidden>
+        <label for="mailMetin">Metni seçip kopyalayın</label>
+        <textarea id="mailMetin" readonly rows="5"></textarea>
+      </div>
+    </div>
+    <p class="mesaj bilgi" id="carkBos" hidden>Bahane listesi boş. app/ayar.js içindeki bahaneler alanını doldurun; şimdilik doğrudan yüklemeye geçebilirsiniz.</p>
+    <div class="eylem">
+      <button type="button" class="btn ana" id="btn-cevir">Çevir</button>
+      <button type="button" class="btn ana" id="btn-yukle" hidden>Yüklemeye geç</button>
+      <button type="button" class="btn ikinci" id="btn-mail" hidden>Maile kopyala</button>
+    </div>
+  </section>
+
+  <!-- E2 Yükleme -->
+  <section class="ekran" id="ekran-e2" data-ekran="e2" hidden>
+    <h2 tabindex="-1" id="e2Baslik">Konteyner yükleme</h2>
+    <div class="yuk-ust">
+      <p class="sira-bilgi" id="siraBilgi"></p>
+    </div>
+    <div class="yuk-alan">
+      <div class="tahta-kolon">
+        <span class="yon">Ön duvar</span>
+        <div class="tahta-kap" id="tahtaKap">
+          <canvas id="tahta" role="img" aria-label="Konteyner tahtası"></canvas>
+        </div>
+        <span class="yon">Kapı</span>
+      </div>
+      <aside class="yan" aria-label="Yükleme durumu">
+        <div class="yan-blok">
+          <span class="yan-baslik">Sıradaki</span>
+          <canvas id="siradaki" width="104" height="64" aria-hidden="true"></canvas>
+          <span class="yan-ad" id="siradakiAd"></span>
+        </div>
+        <div class="yan-blok">
+          <span class="yan-baslik">Sonraki 3</span>
+          <div class="sonraki" id="sonraki"></div>
+        </div>
+        <div class="yan-blok">
+          <span class="yan-baslik">Süre</span>
+          <span class="deger sayi" id="sureDeger">00:00</span>
+        </div>
+        <div class="yan-blok">
+          <span class="yan-baslik">Taban doluluğu</span>
+          <span class="deger sayi" id="dolulukDeger">%0</span>
+        </div>
+        <div class="yan-blok">
+          <span class="yan-baslik">Tonaj</span>
+          <span class="deger sayi" id="tonajDeger">0 / 0 t</span>
+          <span class="olcer" aria-hidden="true"><span class="olcer-dolgu" id="tonajCubuk"></span></span>
+          <span class="durum-etiket" id="tonajEtiket">Rahat</span>
+        </div>
+        <div class="yan-blok">
+          <span class="yan-baslik">Puan</span>
+          <span class="deger sayi" id="puanDeger">0</span>
+        </div>
+        <div class="yan-blok" id="miniBlok">
+          <span class="yan-baslik">Harita</span>
+          <canvas id="mini" aria-hidden="true"></canvas>
+        </div>
+      </aside>
+    </div>
+    <p class="durum-satir" id="durumMetni" role="status" aria-live="polite"></p>
+    <div class="kumanda" id="kumanda">
+      <div class="kum-satir">
+        <button type="button" class="btn kare" id="k-sol" aria-label="Sola kaydır">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M16 4 L6 12 L16 20 Z"/></svg>
+        </button>
+        <button type="button" class="btn kare" id="k-sag" aria-label="Sağa kaydır">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 4 L18 12 L8 20 Z"/></svg>
+        </button>
+        <button type="button" class="btn ikinci genis" id="k-dondur">Döndür</button>
+        <button type="button" class="btn ana genis" id="k-birak">Bırak</button>
+      </div>
+      <div class="kum-satir">
+        <button type="button" class="btn ikinci genis" id="k-atla">Atla (−5 sn)</button>
+        <button type="button" class="btn ikinci genis" id="k-muhur" disabled>Mühürle</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- E2b Mühür -->
+  <section class="ekran" id="ekran-e2b" data-ekran="e2b" hidden>
+    <h2 tabindex="-1">Konteyner mühürlendi</h2>
+    <div class="kart muhur">
+      <p class="kont-no" id="m-no" aria-label="Konteyner numarası"></p>
+      <dl class="sayilar">
+        <div><dt>Yüklenen alan</dt><dd class="sayi" id="m-m2"></dd></div>
+        <div><dt>Taban doluluğu</dt><dd class="sayi" id="m-doluluk"></dd></div>
+        <div><dt>Tonaj</dt><dd class="sayi" id="m-tonaj"></dd></div>
+        <div><dt>Puan</dt><dd class="sayi" id="m-puan"></dd></div>
+      </dl>
+      <p class="meta" id="m-not"></p>
+    </div>
+    <div class="eylem">
+      <button type="button" class="btn ana" id="btn-gumruk">Gümrüğe gönder</button>
+      <button type="button" class="btn ikinci" id="btn-tekrar" hidden>Tekrar yükle</button>
+      <button type="button" class="btn ikinci" id="btn-teslime" hidden>Teslim ekranına dön</button>
+    </div>
+  </section>
+
+  <!-- E3 Takip -->
+  <section class="ekran" id="ekran-e3" data-ekran="e3" hidden>
+    <h2 tabindex="-1">Gönderi takip</h2>
+    <p class="giris">Barkodu tara, dilek açılsın. <strong class="sayi" id="taramaSayac">0/0</strong></p>
+    <p class="mesaj bilgi" id="takipBos" hidden>Dilek listesi boş. app/ayar.js içindeki dilekler alanını doldurun; şimdilik doğrudan teslime geçebilirsiniz.</p>
+    <ol class="zaman" id="zaman"></ol>
+    <div class="eylem" id="takipEylem" hidden>
+      <button type="button" class="btn ana" id="btn-teslimGit">Teslime geç</button>
+    </div>
+  </section>
+
+  <!-- E4 Teslim -->
+  <section class="ekran" id="ekran-e4" data-ekran="e4" hidden>
+    <h2 tabindex="-1" class="teslim-baslik">Teslim edildi — İyi ki doğdun <span id="t-ad">Şeyda</span>!</h2>
+    <article class="kart belge" id="belge" aria-labelledby="belgeBaslik">
+      <h3 id="belgeBaslik">Teslim tesellüm belgesi</h3>
+      <dl class="belge-bilgi">
+        <div><dt>Sevkiyat no</dt><dd id="t-no"></dd></div>
+        <div><dt>Alıcı</dt><dd id="t-alici"></dd></div>
+        <div><dt>Gönderen</dt><dd id="t-gonderen"></dd></div>
+        <div id="t-kont-satir"><dt>Konteyner no</dt><dd id="t-kont"></dd></div>
+        <div><dt>Teslim tarihi</dt><dd id="t-tarih"></dd></div>
+      </dl>
+      <h4>Ekibin dilekleri</h4>
+      <ul class="dilek-liste" id="t-dilekler"></ul>
+      <p class="imza">Teslim alan: <span id="t-imza"></span></p>
+      <p class="imza" id="t-not"></p>
+    </article>
+    <div class="eylem">
+      <button type="button" class="btn ana" id="btn-serbest">Serbest yükleme (rekor dene)</button>
+      <button type="button" class="btn ikinci" id="btn-bastan">Baştan oyna</button>
+      <button type="button" class="btn metin" id="btn-yazdir">Belgeyi yazdır</button>
+    </div>
+  </section>
+
+  <!-- Serbest mod seçimi -->
+  <section class="ekran" id="ekran-ser" data-ekran="ser" hidden>
+    <h2 tabindex="-1">Serbest yükleme</h2>
+    <p class="giris">Konteyner seç. Süre <strong class="sayi" id="serSure">90</strong> sn.</p>
+    <div class="secim" id="konteynerSecim" role="group" aria-label="Konteyner seçimi"></div>
+    <h3 class="alt-baslik">En iyi 5 skor</h3>
+    <ol class="skorlar" id="skorListe"></ol>
+    <p class="mesaj bilgi" id="skorBos">Henüz skor yok.</p>
+    <div class="eylem">
+      <button type="button" class="btn ikinci" id="btn-serGeri">Teslim ekranına dön</button>
+    </div>
+  </section>
+
+</main>
+
+<dialog id="onay" aria-labelledby="onayMetin">
+  <form method="dialog">
+    <p id="onayMetin"></p>
+    <div class="onay-dugme">
+      <button type="submit" value="hayir" class="btn ikinci" id="onayHayir">Vazgeç</button>
+      <button type="submit" value="evet" class="btn ana" id="onayEvet">Onayla</button>
+    </div>
+  </form>
+</dialog>
+
+<canvas id="konfeti" class="konfeti" aria-hidden="true"></canvas>
+
+<script src="ayar.js"></script>
+<script src="motor.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

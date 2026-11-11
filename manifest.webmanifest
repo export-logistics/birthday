@@ -1,0 +1,11 @@
+{
+  "name": "Doğum Günü Sevkiyatı",
+  "short_name": "Sevkiyat",
+  "lang": "tr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "theme_color": "#0f2747",
+  "background_color": "#fbf8f3",
+  "icons": [{ "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}
