@@ -19,6 +19,7 @@
   --p-porselen: #f6ddba;
   --p-teras: #e3d5f0;
   --p-buyuk: #f5cfd3;
+  --p-ikicm: #e8e2c4;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -90,6 +91,8 @@ p, dd, li, h2, h3 { overflow-wrap: anywhere; }
 .bildirim > div:last-child { border-bottom: 0; }
 dt { color: var(--metin-2); font-size: 14px; }
 dd { font-weight: 600; }
+.ad-girdi { width: 100%; max-width: 240px; min-height: 36px; padding: 2px 4px; font: inherit; font-weight: 700; color: var(--lacivert); background: #fff; border: 0; border-bottom: 2px dashed var(--lacivert); border-radius: 0; }
+.ipucu { display: block; margin-top: 4px; font-size: 12px; font-weight: 400; color: var(--metin-2); }
 
 /* E1 çark */
 .cark-alan { position: relative; width: min(100%, 300px); margin: 6px auto 0; }

@@ -25,6 +25,7 @@
     return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   }
   function tr(n, o) { return M.trSayi(n, o || 0); }
+  function hikayeKonteyner() { return (A && A.hikayeKonteyner) || "20'"; }
 
   /* ---------- Hata ekranı (sessiz başarısızlık yok) ---------- */
   function hataGoster(metin) {
@@ -63,7 +64,7 @@
       });
     }
     var k = A.konteynerler;
-    if (!k || !k["20'"]) s.push('AYAR.konteynerler["20\'"] eksik.');
+    if (!k || !k[hikayeKonteyner()]) s.push('AYAR.konteynerler["' + hikayeKonteyner() + '"] eksik (hikayeKonteyner).');
     else {
       Object.keys(k).forEach(function (ad) {
         var c = k[ad];
@@ -95,6 +96,7 @@
   /* ---------- Depo (localStorage; yoksa bellekte) ---------- */
   var ANAHTAR = 'dgs.v1';
   var SKOR_ANAHTAR = 'dgs.skor.v1';
+  var AD_ANAHTAR = 'dgs.ad.v1';
   var depoSorunlu = false;
   var bellek = {};
   function depoOku(anahtar) {
@@ -168,10 +170,26 @@
   }
 
   /* ---------- E0 ---------- */
-  function alici() { return A.alici.ad; }
+  /* Alıcı adı: ?ad=… > bu cihazda kayıtlı ad > AYAR.alici.ad. En çok 24 karakter; boş bırakılırsa varsayılan. */
+  function adTemizle(ham) {
+    return String(ham || '').replace(/[\u0000-\u001f\u007f]/g, '').replace(/\s+/g, ' ').trim().slice(0, 24);
+  }
+  var secilenAd = (function () {
+    var urlAd = '';
+    try { urlAd = adTemizle(new URLSearchParams(window.location.search).get('ad')); } catch (e) { urlAd = ''; }
+    if (urlAd) { depoYaz(AD_ANAHTAR, urlAd); return urlAd; }
+    var kayitli = depoOku(AD_ANAHTAR);
+    return typeof kayitli === 'string' ? adTemizle(kayitli) : '';
+  })();
+  function alici() { return secilenAd || A.alici.ad; }
+  function adDegisti(deger, kesin) {
+    secilenAd = adTemizle(deger);
+    depoYaz(AD_ANAHTAR, secilenAd);
+    if (kesin && !secilenAd) $('b-alici').value = alici();
+  }
   function e0Kur() {
     yazi($('b-no'), A.sevkiyatNo);
-    yazi($('b-alici'), alici().trim());
+    $('b-alici').value = alici();
     yazi($('b-gonderen'), A.gonderen || '');
     yazi($('b-icerik'), A.icerik || '');
     yazi($('b-tarih'), A.tarihMetni);
@@ -778,7 +796,7 @@
       if (tarandi) {
         var kart = yap('div', 'dilek-kart');
         kart.appendChild(yap('div', 'kisi', d.kisi));
-        kart.appendChild(yap('div', 'mesaj-metin', d.mesaj));
+        kart.appendChild(yap('div', 'mesaj-metin', M.adYerlestir(d.mesaj, alici())));
         if (i === durum.takip - 1 && odakli) { kart.tabIndex = -1; kart.setAttribute('role', 'status'); odakKart = kart; }
         li.appendChild(kart);
       } else if (acik) {
@@ -848,7 +866,7 @@
   }
 
   function teslimKur(konfeti) {
-    yazi($('t-ad'), A.alici.ad);
+    yazi($('t-ad'), alici());
     yazi($('t-no'), A.sevkiyatNo);
     yazi($('t-alici'), alici().trim());
     yazi($('t-gonderen'), A.gonderen || '');
@@ -863,7 +881,7 @@
     A.dilekler.forEach(function (d) {
       var li = yap('li');
       li.appendChild(yap('span', 'kisi', d.kisi + ': '));
-      li.appendChild(document.createTextNode(d.mesaj));
+      li.appendChild(document.createTextNode(M.adYerlestir(d.mesaj, alici())));
       liste.appendChild(li);
     });
     if (konfeti) konfetiBaslat();
@@ -900,7 +918,7 @@
   function ekranAc(ad, odak) {
     if (ad === 'e0') { e0Kur(); git('e0', odak); }
     else if (ad === 'e1') { git('e1', odak); e1Kur(); }
-    else if (ad === 'e2') { oyunBaslat('hikaye', "20'"); }
+    else if (ad === 'e2') { oyunBaslat('hikaye', hikayeKonteyner()); }
     else if (ad === 'e2b') {
       if (!durum.muhur) { ekranAc('e1', odak); return; }
       git('e2b', odak);
@@ -921,6 +939,8 @@
       } else basla();
     });
     $('btn-devam').addEventListener('click', function () { ekranAc(durum.ekran, true); });
+    $('b-alici').addEventListener('input', function (e) { adDegisti(e.target.value, false); });
+    $('b-alici').addEventListener('change', function (e) { adDegisti(e.target.value, true); });
     $('btn-cevir').addEventListener('click', cevir);
     $('btn-mail').addEventListener('click', mailKopyala);
     $('btn-yukle').addEventListener('click', function () { ekranAc('e2', true); });

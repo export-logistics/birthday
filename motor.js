@@ -208,13 +208,18 @@
     return sirali.slice(0, n);
   }
 
+  /* Metindeki {ad} yer tutucularını ada çevirir (harf duyarsız, { ad } toleranslı); $ dizileri yorumlanmaz. */
+  function adYerlestir(metin, ad) {
+    return String(metin).replace(/\{\s*ad\s*\}/gi, function () { return String(ad); });
+  }
+
   var Motor = {
     yeniTahta: yeniTahta, dondur: dondur, inisSirasi: inisSirasi, yerlestir: yerlestir,
     dolulukYuzdesi: dolulukYuzdesi, toplamTonaj: toplamTonaj, tonajSigarMi: tonajSigarMi,
     puanHesapla: puanHesapla, kontrolHanesi: kontrolHanesi, konteynerNo: konteynerNo,
     trSayi: trSayi, enBuyukDoluSira: enBuyukDoluSira, kameraUstu: kameraUstu,
     sigabilirMi: sigabilirMi, agirlikliSec: agirlikliSec, hucrePx: hucrePx,
-    carkAcisi: carkAcisi, carkDilimi: carkDilimi, skorEkle: skorEkle
+    carkAcisi: carkAcisi, carkDilimi: carkDilimi, skorEkle: skorEkle, adYerlestir: adYerlestir
   };
 
   if (typeof module !== 'undefined' && module.exports) module.exports = Motor;
