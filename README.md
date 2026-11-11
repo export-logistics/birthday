@@ -1,6 +1,6 @@
 # Doğum Günü Sevkiyatı
 
-Doğum günü hediyesi: telefonda açılan, kurulumsuz, bağımlılıksız mini oyun: çark, 10' konteyner yükleme, 4 duraklı gönderi takip, teslim. Alıcı adı açılış kartında değiştirilir (varsayılan `AYAR.alici.ad` = "Şeyma"; bağlantıya `?ad=…` eklenerek de verilir, cihazda saklanır).
+Doğum günü hediyesi: telefonda açılan, kurulumsuz, bağımlılıksız mini oyun: çark, 10' konteyner yükleme, 4 duraklı gönderi takip, teslim. Alıcı adı açılış kartında değiştirilir (varsayılan `AYAR.alici.ad` = "Şeyda"; bağlantıya `?ad=…` eklenerek de verilir, cihazda saklanır).
 
 ## Açmak
 
@@ -48,4 +48,5 @@ Elle dolduracağın tek yer. Yaş/doğum yılı yazma.
 
 ## Değişiklikler
 
+- 11.11.2026 gece (Aslan): açılış adı yeniden "Şeyda" (`AYAR.alici.ad`; kartta değiştirme ve `?ad=` aynen kalır).
 - 11.11.2026 akşam (Aslan): paletler Akgün ürünleri oldu; içerik satırı "1 × 10' · 5 palet 60×120N Neo Calacatta Silver · 1 palet iyi dilek"; alıcı adı açılışta "Şeyma" ve değiştirilebilir; hikâye konteyneri 10' (kısa oyun); takip 4 durak.

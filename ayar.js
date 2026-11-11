@@ -6,7 +6,7 @@
  * Dilek metinlerindeki {ad} seçilen ada dönüşür. hikayeKonteyner: hikâyede yüklenen konteyner (konteynerler anahtarı).
  */
 window.AYAR = {
-  alici: { ad: "Şeyma", soyad: "" },
+  alici: { ad: "Şeyda", soyad: "" },
   gonderen: "İhracat Lojistik Departmanı",
   icerik: "1 × 10' · 5 palet 60×120N Neo Calacatta Silver · 1 palet iyi dilek",
   tarihMetni: "11 Kasım",
